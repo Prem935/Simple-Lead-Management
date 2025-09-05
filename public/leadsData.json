@@ -1,0 +1,42 @@
+[
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "9876543210",
+    "source": "Website",
+    "city": "Delhi",
+    "state": "Delhi"
+  },
+  {
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "phone": "9123456780",
+    "source": "Referral",
+    "city": "Delhi",
+    "state": "Delhi"
+  },
+  {
+    "name": "Amit Verma",
+    "email": "amit.v@example.com",
+    "phone": "9988776655",
+    "source": "Ads",
+    "city": "Delhi",
+    "state": "Delhi"
+  },
+  {
+    "name": "Sara Khan",
+    "email": "sara.khan@example.com",
+    "phone": "9090909090",
+    "source": "Website",
+    "city": "Delhi",
+    "state": "Delhi"
+  },
+  {
+    "name": "Michael Brown",
+    "email": "michael.brown@example.com",
+    "phone": "9876501234",
+    "source": "Referral",
+    "city": "Delhi",
+    "state": "Delhi"
+  }
+]
