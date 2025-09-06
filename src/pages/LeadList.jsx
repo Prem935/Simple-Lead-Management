@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function LeadList({ leads }) {
+export default function LeadList({ leads, onDelete, onEdit }) {
+  const navigate = useNavigate();
   if (leads.length === 0)
     return <p className="text-gray-500">No leads captured yet.</p>;
 
@@ -21,11 +23,12 @@ export default function LeadList({ leads }) {
               <th className="p-2 border">Assigned To</th>
               <th className="p-2 border">City</th>
               <th className="p-2 border">State</th>
+              <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {leads.map((lead, i) => (
-              <tr key={i} className="text-center">
+            {leads.map((lead, index) => (
+              <tr key={index} className="text-center">
                 <td className="p-2 border">{lead.name}</td>
                 <td className="p-2 border">{lead.email}</td>
                 <td className="p-2 border">{lead.phone}</td>
@@ -36,6 +39,23 @@ export default function LeadList({ leads }) {
                 <td className="p-2 border">{lead.assignedTo || "-"}</td>
                 <td className="p-2 border">{lead.city || "-"}</td>
                 <td className="p-2 border">{lead.state || "-"}</td>
+                <td className="p-2 border">
+                  <button
+                    className="text-blue-600 mr-2"
+                    onClick={() => {
+                      onEdit(lead);
+                      navigate("/add");
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="text-red-600"
+                    onClick={() => onDelete(lead.email)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

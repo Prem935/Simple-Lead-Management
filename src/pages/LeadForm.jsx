@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-function LeadForm({ onAddLead }) {
+function LeadForm({ onAddLead, onEditLead, editingLead }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,6 +15,11 @@ function LeadForm({ onAddLead }) {
     state: "",
   });
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (editingLead) setFormData(editingLead);
+  }, [editingLead]);
 
   const validate = () => {
     let newErrors = {};
@@ -44,7 +50,11 @@ function LeadForm({ onAddLead }) {
       return;
     }
 
-    onAddLead(formData);
+    if (editingLead) {
+      onEditLead(formData);
+    } else {
+      onAddLead(formData);
+    }
     setFormData({
       name: "",
       email: "",
@@ -57,6 +67,7 @@ function LeadForm({ onAddLead }) {
       city: "",
       state: "",
     });
+    navigate("/");
     setErrors({});
   };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,8 +9,18 @@ import {
 import LeadForm from "./LeadForm";
 import LeadList from "./LeadList";
 
-function LeadListPage({ leads }) {
+// list page component
+function LeadListPage({ leads, onDelete, onEdit }) {
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
+  const filteredLeads = leads.filter(
+    (lead) =>
+      lead.name.toLowerCase().includes(search.toLowerCase()) ||
+      lead.email.toLowerCase().includes(search.toLowerCase()) ||
+      lead.phone.includes(search)
+  );
+
   return (
     <div className="p-4 bg-gray-700 min-h-screen">
       <h1 className="text-4xl text-center font-bold text-zinc-200">
@@ -23,12 +34,22 @@ function LeadListPage({ leads }) {
           Add New Lead
         </button>
       </div>
-      <LeadList leads={leads} />
+
+      <input
+        type="text"
+        placeholder="Search by name, email, or phone"
+        className="mb-4 p-2 border rounded w-full max-w-xs"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <LeadList leads={filteredLeads} onDelete={onDelete} onEdit={onEdit} />
     </div>
   );
 }
 
-function LeadFormPage({ onAddLead }) {
+//form page component
+function LeadFormPage({ onAddLead, onEditLead, editingLead }) {
   const navigate = useNavigate();
   return (
     <div className="p-4 bg-gray-700 min-h-screen">
@@ -43,13 +64,18 @@ function LeadFormPage({ onAddLead }) {
           Back to List
         </button>
       </div>
-      <LeadForm onAddLead={onAddLead} />
+      <LeadForm
+        onAddLead={onAddLead}
+        editingLead={editingLead}
+        onEditLead={onEditLead}
+      />
     </div>
   );
 }
 
 const App = () => {
   const [leads, setLeads] = useState([]);
+  const [editingLead, setEditingLead] = useState(null);
 
   useEffect(() => {
     fetch("/leadsData.json")
@@ -60,13 +86,48 @@ const App = () => {
 
   const addLead = (lead) => {
     setLeads((prev) => [...prev, lead]);
+    toast.success("Lead added!");
+  };
+
+  const editLead = (updatedLead) => {
+    setLeads((prev) =>
+      prev.map((lead) =>
+        lead.email === updatedLead.email ? updatedLead : lead
+      )
+    );
+    setEditingLead(null);
+    toast.success("Lead updated!");
+  };
+
+  const deleteLead = (email) => {
+    setLeads((prev) => prev.filter((lead) => lead.email !== email));
+    toast.info("Lead deleted.");
   };
 
   return (
     <Router>
+      <ToastContainer position="top-right" autoClose={2000} />
       <Routes>
-        <Route path="/" element={<LeadListPage leads={leads} />} />
-        <Route path="/add" element={<LeadFormPage onAddLead={addLead} />} />
+        <Route
+          path="/"
+          element={
+            <LeadListPage
+              leads={leads}
+              onDelete={deleteLead}
+              onEdit={(lead) => setEditingLead(lead)}
+            />
+          }
+        />
+        <Route
+          path="/add"
+          element={
+            <LeadFormPage
+              onAddLead={addLead}
+              editingLead={editingLead}
+              onEditLead={editLead}
+            />
+          }
+        />
         <Route
           path="*"
           element={
